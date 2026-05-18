@@ -1,0 +1,5 @@
+* @jun-shiromizu
+
+# 将来的にカテゴリごとのオーナーを追加する場合は、下のように上書きする。
+# /docs/ @team-docs
+# /.github/workflows/ @team-platform

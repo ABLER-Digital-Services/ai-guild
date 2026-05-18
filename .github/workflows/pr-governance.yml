@@ -1,0 +1,118 @@
+name: PR Governance
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR template sections
+        env:
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import sys
+
+          body = os.environ.get("PR_BODY", "")
+          required_sections = [
+              "## Summary",
+              "## Why",
+              "## Change Type",
+              "## Target Agent Scope",
+              "## Affected Areas",
+              "## Risk Check",
+              "## Validation",
+          ]
+
+          missing_sections = [section for section in required_sections if section not in body]
+
+          if missing_sections:
+              print(
+                  "Pull Request template is incomplete. Missing sections: "
+                  + ", ".join(missing_sections),
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+          PY
+
+      - name: Validate changed paths
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.request
+
+          allowed_root_entries = {
+              ".github",
+              "docs",
+              "instructions",
+              "agents",
+              "skills",
+              "hooks",
+              "workflows",
+              "cookbook",
+              "README.md",
+              "CONTRIBUTING.md",
+              "AGENTS.md",
+              "SECURITY.md",
+              "CODE_OF_CONDUCT.md",
+              "CODEOWNERS",
+          }
+
+          repository = os.environ["REPOSITORY"]
+          pr_number = os.environ["PR_NUMBER"]
+          token = os.environ["GITHUB_TOKEN"]
+          api_url = f"https://api.github.com/repos/{repository}/pulls/{pr_number}/files?per_page=100"
+
+          request = urllib.request.Request(
+              api_url,
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              },
+          )
+
+          with urllib.request.urlopen(request) as response:
+              files = json.load(response)
+
+          invalid_files = []
+          for file in files:
+              filename = file["filename"]
+              root_entry = filename.split("/", 1)[0] if "/" in filename else filename
+              if root_entry not in allowed_root_entries:
+                  invalid_files.append(filename)
+
+          if invalid_files:
+              print(
+                  "Pull Request contains files outside the approved repository layout: "
+                  + ", ".join(invalid_files),
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+          PY
+
+      - name: Report assumed defaults
+        run: |
+          echo "Assumed defaults for this stage:"
+          echo "- main direct push is not allowed"
+          echo "- at least one human review is expected"
+          echo "- AI review will be added after backend selection"
+          echo "- contributor visibility starts from a simple list"
