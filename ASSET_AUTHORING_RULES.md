@@ -133,7 +133,7 @@
 ##### ドメインプレフィックス案
 
 - `app`: アプリケーション
-- `infra`: インフラ
+- `inf`: インフラ
 - `ops`: 運用
 - `mig`: 移行
 - `pm`: プロジェクト管理
@@ -144,7 +144,7 @@
 - `des-app-api-contract-review`
 - `cod-app-react-form-implementation`
 - `ut-app-service-unit-test`
-- `it-infra-ci-pipeline-check`
+- `it-inf-ci-pipeline-check`
 - `st-nf-performance-regression`
 - `des-mig-data-cutover-plan`
 
