@@ -12,7 +12,7 @@ ai-guild の貢献可視化は、まずは all-contributors 方式の軽量運�
 
 - 重み付きスコアやランキングは導入しない
 - README の contributors セクションで可視化する
-- 必要なら docs 側に運用ルールを補足する
+- 必要なら .docs 側に運用ルールを補足する
 
 ## all-contributors を採用する理由
 

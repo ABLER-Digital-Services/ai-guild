@@ -64,7 +64,7 @@ jobs:
 
           allowed_root_entries = {
               ".github",
-              "docs",
+              ".docs",
               "instructions",
               "agents",
               "skills",

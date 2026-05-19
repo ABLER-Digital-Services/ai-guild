@@ -18,7 +18,7 @@ ai-guild は、社内向けの AI エージェント活用ナレッジとカス�
 - instructions の追加、改善、廃止提案
 - agents や skills の追加、改善
 - hooks や workflows の整備
-- cookbook や docs の改善
+- cookbook や .docs の改善
 - 分類、メタデータ、索引の改善
 
 ## 投稿前に確認すること
@@ -77,4 +77,4 @@ ai-guild は、社内向けの AI エージェント活用ナレッジとカス�
 - ブランチ保護の厳格度
 - contributors 追加をどこまで定期運用に寄せるか
 
-詳細な検討事項は docs/decisions.md を参照してください。
+詳細な検討事項は .docs/decisions.md を参照してください。
