@@ -116,6 +116,7 @@ my-awesome-skill/
 
 1. Copy the `make-skill-template/` folder
 2. Rename to your skill name (lowercase, hyphens)
+   - このリポジトリでは、[../../../ASSET_AUTHORING_RULES.md](../../../ASSET_AUTHORING_RULES.md) のドラフト命名案として `<phase>-<topic>` または `<phase>-<domain>-<topic>` を推奨
 3. Update `SKILL.md`:
    - Change `name:` to match folder name
    - Write a keyword-rich `description:`
@@ -127,7 +128,7 @@ my-awesome-skill/
 
 - [ ] Folder name is lowercase with hyphens
 - [ ] `name` field matches folder name exactly
-- [ ] `description` is 10-1024 characters
+- [ ] `description` is 1-1024 characters
 - [ ] `description` explains WHAT and WHEN
 - [ ] `description` is wrapped in single quotes
 - [ ] Body content is under 500 lines

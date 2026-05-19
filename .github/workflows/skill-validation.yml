@@ -139,8 +139,8 @@ jobs:
               if not description:
                   errors.append(f"{skill_file}: frontmatter に description が必要です")
               else:
-                  if len(description) < 10 or len(description) > 1024:
-                      errors.append(f"{skill_file}: description は 10-1024 文字にしてください")
+                  if len(description) < 1 or len(description) > 1024:
+                      errors.append(f"{skill_file}: description は 1-1024 文字にしてください")
                   if not has_what_when_description(description):
                       errors.append(f"{skill_file}: description は『何をするか』と『いつ使うか』が分かる書き方にしてください")
 

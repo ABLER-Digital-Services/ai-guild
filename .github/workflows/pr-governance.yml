@@ -73,9 +73,11 @@ jobs:
               "cookbook",
               "README.md",
               ".all-contributorsrc",
+              "ASSET_AUTHORING_RULES.md",
               "CONTRIBUTING.md",
               "AGENTS.md",
               "SECURITY.md",
+              "SUPPORT.md",
               "CODE_OF_CONDUCT.md",
               "CODEOWNERS",
           }
