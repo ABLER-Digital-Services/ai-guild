@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   update-contributors:
-    runs-on: ubuntu-latest
+    runs-on: larger-ubuntu-8core-fixed-ip
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
