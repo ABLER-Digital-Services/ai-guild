@@ -28,6 +28,7 @@ ai-guild の AI 自動レビュー初版は、GitHub Rulesets と Copilot code r
 - 許可されたディレクトリ構成の確認
 - Copilot code review の自動実行
 - `.github/instructions/*.instructions.md` によるレビュー観点の補強
+- skills 向けの独立 validator を required check として実行
 - CODEOWNERS と人間レビューの前提整備
 - Rulesets による main 保護
 

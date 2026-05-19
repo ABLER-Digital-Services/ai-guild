@@ -91,11 +91,16 @@
 - Dismiss stale pull request approvals when new commits are pushed: On
 - Require review from Code Owners: On
 - Require status checks to pass before merging: On
-- Required status checks: `PR Governance / validate-pr`
+- Required status checks: `PR Governance / validate-pr (pull_request)`
+- Required status checks: `Skill Validation / validate-skills (pull_request)`
 - Require branches to be up to date before merging: On
 - Block force pushes: On
 - Block deletions: On
 - Restrict updates: 必要に応じて設定
+
+補足:
+
+- `Skill Validation / validate-skills (pull_request)` は全 Pull Request で実行し、skills に変更がない場合は no-op で成功終了する前提で required check に含める
 
 ### 3. Copilot code review の有効化
 
@@ -107,13 +112,14 @@
 確認ポイント:
 
 - CODEOWNERS により @jun-shiromizu がレビュー対象に入ること
-- `PR Governance / validate-pr` が required status check としてブロックすること
+- `PR Governance / validate-pr (pull_request)` が required status check としてブロックすること
+- `Skill Validation / validate-skills (pull_request)` が skill 変更時に検証を行い、非 skill PR では成功終了すること
 - Copilot review comment が自動で付与されること
 - `.github/copilot-instructions.md` の日本語方針がレビュー文面にも反映されること
 
 ## 補足
 
-もし `PR Governance / validate-pr` が required status checks に表示されない場合は、先に一度 Pull Request を流して workflow を実行し、チェック名が GitHub に認識された後で required に設定してください。
+もし `PR Governance / validate-pr (pull_request)` または `Skill Validation / validate-skills (pull_request)` が required status checks に表示されない場合は、先に一度 Pull Request を流して workflow を実行し、チェック名が GitHub に認識された後で required に設定してください。
 
 Copilot code review は required approval には数えられず、マージ可否を直接ブロックしません。このリポジトリでは Copilot review を早期検知の自動信号、人間レビューを最終判断として扱います。
 
