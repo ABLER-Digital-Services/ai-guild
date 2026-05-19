@@ -112,7 +112,7 @@ jobs:
           ]
 
           if not changed_skill_docs and not changed_skill_scripts:
-              print("No skill files changed. Skill validation skipped.")
+              print("skills 配下の変更がないため、Skill Validation を成功扱いで終了します。")
               sys.exit(0)
 
           errors = []
@@ -159,10 +159,10 @@ jobs:
                       errors.append(f"{script_file}: {label} に該当するパターンが含まれています")
 
           if errors:
-              print("Skill validation failed:", file=sys.stderr)
+              print("Skill Validation に失敗しました:", file=sys.stderr)
               for error in errors:
                   print(f"- {error}", file=sys.stderr)
               sys.exit(1)
 
-          print("Skill validation passed.")
+          print("Skill Validation を完了しました。")
           PY
