@@ -74,6 +74,6 @@ last-reviewed: 2026-05-18
 
 ## 運用方針
 
-- 初期段階では docs と cookbook は緩めに始める
+- 初期段階では .docs と cookbook は緩めに始める
 - instructions、agents、skills、hooks、workflows は早めにそろえる
 - 必須項目は自動チェックの対象にしていく

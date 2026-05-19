@@ -31,7 +31,7 @@
 - [ ] hooks
 - [ ] workflows
 - [ ] cookbook
-- [ ] docs
+- [ ] .docs
 
 ## Risk Check
 

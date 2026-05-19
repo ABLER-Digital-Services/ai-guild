@@ -31,7 +31,7 @@
 初期の考え方:
 
 - 当面は個人オーナー 1 名で開始する
-- docs と workflows は必要に応じて別オーナーを重ねる
+- .docs と workflows は必要に応じて別オーナーを重ねる
 
 ### 3. Pull Request review
 
@@ -49,7 +49,7 @@
 
 - Discussions を使うかは後で判断
 - Projects は必要になってから有効化
-- Wiki は使わず docs に寄せる
+- Wiki は使わず .docs に寄せる
 
 ## 今後この後にやること
 

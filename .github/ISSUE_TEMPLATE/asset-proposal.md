@@ -18,7 +18,7 @@ assignees: []
 - [ ] hooks
 - [ ] workflows
 - [ ] cookbook
-- [ ] docs
+- [ ] .docs
 
 ## 対象エージェント
 
