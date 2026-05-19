@@ -18,13 +18,16 @@ Playwright テストを実行し、結果を確認する。
 
 ## 前提条件
 
-実行前に以下が完了していること:
+実行前に、対象リポジトリ側のセットアップ手順と E2E 実行規約を確認すること。
+
+- 依存パッケージの導入方法は、対象リポジトリ側の README や instructions に従う
+- `npm install` など lockfile 変更や lifecycle script 実行を伴う操作は、必要性を説明したうえでユーザー承認を得る
+- Playwright ブラウザの追加インストールが必要な場合も、対象リポジトリ側の推奨手順に従う
+
+例:
 
 ```bash
-# 依存パッケージがインストール済み
-npm install
-
-# Playwright ブラウザがインストール済み
+# Playwright ブラウザの追加セットアップが必要な場合の例
 npx playwright install --with-deps chromium
 ```
 
@@ -64,10 +67,9 @@ $env:BASE_URL="http://localhost:3000"; npm test
 
 # ステージング環境
 $env:BASE_URL="https://staging.example.com"; npm test
-
-# SauceDemo（デフォルト - 環境変数なしで実行可能）
-npm test
 ```
+
+環境変数を指定しない場合の既定値は固定せず、対象リポジトリ側の E2E 設定・README・CI 定義に従う。
 
 PowerShell 以外の場合:
 ```bash

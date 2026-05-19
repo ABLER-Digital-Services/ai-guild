@@ -1,6 +1,6 @@
 ---
 name: req-nf-ops-log-management
-description: '基盤概要設計_ログ管理編を作成・更新・レビューする。AWSサービス（CloudTrail・VPC Flow Logs・ALBアクセスログ・CloudWatch Logs等）のログ収集設計・Kinesis Data Firehose等によるログ転送設計・S3へのログ保管設計（ライフサイクルポリシー・保管期間）・AtenaやSplunk等を使ったログ分析設計・CloudWatch Alarmによるログ監視設計を定義する。「ログ管理設計書を作って」「ログ管理を整理して」「CloudTrailの設計を書いて」「S3にログを保管する設計を書いて」「Athenaでログを分析する設計を書いて」「ログ保管期間を定義して」と言われたときに使用する。'
+description: '基盤概要設計_ログ管理編を作成・更新・レビューする。AWSサービス（CloudTrail・VPC Flow Logs・ALBアクセスログ・CloudWatch Logs等）のログ収集設計・Kinesis Data Firehose等によるログ転送設計・S3へのログ保管設計（ライフサイクルポリシー・保管期間）・AthenaやSplunk等を使ったログ分析設計・CloudWatch Alarmによるログ監視設計を定義する。「ログ管理設計書を作って」「ログ管理を整理して」「CloudTrailの設計を書いて」「S3にログを保管する設計を書いて」「Athenaでログを分析する設計を書いて」「ログ保管期間を定義して」と言われたときに使用する。'
 ---
 
 # 基盤概要設計_ログ管理編スキル

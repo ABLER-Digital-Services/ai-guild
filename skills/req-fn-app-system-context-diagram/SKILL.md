@@ -47,7 +47,7 @@ description: 'システム関連図（draw.io形式）とその説明Markdownを
 
 ### Step 2: draw.io ファイルの生成
 
-draw.io MCP (`mcp_drawio_open_drawio_xml`) を使い、`templates/system-context-diagram-template.drawio` をベースにシステム名・機능名・矢印ラベルを実際の内容に差し替えて生成する。
+draw.io MCP (`mcp_drawio_open_drawio_xml`) を使い、`templates/system-context-diagram-template.drawio` をベースにシステム名・機能名・矢印ラベルを実際の内容に差し替えて生成する。
 
 ### Step 3: Markdownラッパーの作成
 
