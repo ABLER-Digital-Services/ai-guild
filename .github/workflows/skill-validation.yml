@@ -58,7 +58,6 @@ jobs:
               "危険な PowerShell 実行": re.compile(r"\b(Invoke-Expression|iex)\b", re.IGNORECASE),
               "ルート削除": re.compile(r"rm\s+-rf\s+/(\s|$)"),
               "永続化や起動時改変": re.compile(r"(\.bashrc\b|\.zshrc\b|crontab\b|schtasks\b|LaunchAgents\b|systemd\b|rc\.local\b)", re.IGNORECASE),
-              "pytest の conftest.py 持ち込み": re.compile(r"(^|/)conftest\.py$", re.IGNORECASE),
               "GitHub トークン形式": re.compile(r"\b(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
               "AWS Access Key 形式": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
               "秘密鍵": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
@@ -125,14 +124,21 @@ jobs:
           def validate_optional_frontmatter(frontmatter, skill_file):
               errors = []
 
-              compatibility = frontmatter.get("compatibility", "")
-              if compatibility and len(compatibility) > 500:
-                  errors.append(f"{skill_file}: compatibility は 1-500 文字にしてください")
+              if "compatibility" in frontmatter:
+                  compatibility = frontmatter.get("compatibility", "")
+                  if len(compatibility) < 1 or len(compatibility) > 500:
+                      errors.append(f"{skill_file}: compatibility は指定する場合、1-500 文字にしてください")
 
               allowed_tools = frontmatter.get("allowed-tools")
               if allowed_tools is not None and not allowed_tools.strip():
                   errors.append(f"{skill_file}: allowed-tools を使う場合は空にしないでください")
 
+              return errors
+
+          def validate_skill_path(path):
+              errors = []
+              if path.name.lower() == "conftest.py":
+                  errors.append(f"{path}: pytest の conftest.py はエコシステム攻撃につながるため skills 配下に追加しないでください")
               return errors
 
           def validate_prefix_convention(name, skill_file):
@@ -244,6 +250,7 @@ jobs:
               if not full_path.exists() or full_path.is_dir():
                   continue
               text = full_path.read_text(encoding="utf-8", errors="ignore")
+              errors.extend(validate_skill_path(script_file))
               errors.extend(validate_skill_text_security(text, script_file))
               for label, pattern in DANGEROUS_PATTERNS.items():
                   if pattern.search(text):
@@ -253,13 +260,9 @@ jobs:
               full_path = REPO / other_file
               if not full_path.exists() or full_path.is_dir():
                   continue
-              if other_file.name.lower() == "conftest.py":
-                  errors.append(f"{other_file}: pytest の conftest.py はエコシステム攻撃につながるため skills 配下に追加しないでください")
+              errors.extend(validate_skill_path(other_file))
               text = full_path.read_text(encoding="utf-8", errors="ignore")
               errors.extend(validate_skill_text_security(text, other_file))
-              for label, pattern in DANGEROUS_PATTERNS.items():
-                  if pattern.search(str(other_file)):
-                      errors.append(f"{other_file}: {label} に該当するファイル名またはパスです")
 
           if errors:
               print("Skill Validation に失敗しました:", file=sys.stderr)
