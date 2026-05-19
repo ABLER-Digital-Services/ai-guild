@@ -13,17 +13,13 @@ Agent Skills の記述ルールは、公式仕様に合わせて次を満たし�
 - `description` は skill が何をするかと、いつ使うかを具体的に書く
 - 詳細資料は `references/`、実行コードは `scripts/`、静的リソースは `assets/` に分ける
 
-このリポジトリでは、システム開発系 skill の命名統一のためにプレフィックス案も提案しています。詳細は [../ASSET_AUTHORING_RULES.md](../ASSET_AUTHORING_RULES.md) の skills 章を参照してください。
+## 本リポジトリ独自仕様
 
-- 工程プレフィックス案: `req`, `des`, `cod`, `ut`, `it`, `st`
-- 観点プレフィックス案: `fn`, `nf`
-- ドメインプレフィックス案: `app`, `inf`, `ops`, `mig`, `pm`
-- 例: `des-app-api-contract-review`, `ut-app-service-unit-test`, `st-nf-performance-regression`
+- skill の命名統一のためにプレフィックス案も提案しています。
+  - 工程プレフィックス案: `req`(要件定義), `des`(設計), `cod`(コーディング), `ut`(単体テスト), `it`(結合テスト), `st`(システムテスト)
+  - 観点プレフィックス案: `fn`(機能), `nf`(非機能)
+  - ドメインプレフィックス案: `app`(業務アプリ), `inf`(インフラ), `ops`(運用), `mig`(移行), `pm`(プロ管)
+  - 例: `des-app-api-contract-review`, `ut-app-service-unit-test`, `st-nf-performance-regression`
 
-例:
-
-- 特定フレームワークの実装手順
-- 調査やレビューの定型手順
-- 社内標準のまとめ
-
-追加時は、入出力、適用条件、期待する成果を明記してください。
+- skill をプロジェクトを横断して共有できるようにするため、「リポジトリのディレクトリ構成」に特別なルールを設けず、どんなディレクトリ構成であっても使えるようなスキルにして下さい。
+  - ディレクトリ情報が必要な場合は外部から取得できる前提でスキルを作ってください。
