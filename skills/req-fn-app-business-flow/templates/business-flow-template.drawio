@@ -1,0 +1,87 @@
+<mxfile host="65bd71144e">
+    <diagram name="業務フロー_〇〇処理" id="0">
+        <mxGraphModel dx="608" dy="775" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="業務フロー：〇〇処理" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontStyle=1;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="10" width="720" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="利用者（〇〇）" style="swimlane;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="50" width="220" height="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="開始" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" parent="10" vertex="1">
+                    <mxGeometry x="70" y="60" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="〇〇を操作する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="10" vertex="1">
+                    <mxGeometry x="50" y="180" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="完了を確認する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="10" vertex="1">
+                    <mxGeometry x="50" y="580" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="終了" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" parent="10" vertex="1">
+                    <mxGeometry x="70" y="690" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="401" style="edgeStyle=orthogonalEdgeStyle;" parent="10" source="101" target="102" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="404" style="edgeStyle=orthogonalEdgeStyle;" parent="10" source="104" target="105" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="〇〇システム" style="swimlane;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="50" width="220" height="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="201" value="入力値を検証する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="20" vertex="1">
+                    <mxGeometry x="50" y="180" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="203" value="〇〇の確認" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="20" vertex="1">
+                    <mxGeometry x="60" y="300" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="202" value="〇〇処理を実行する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="20" vertex="1">
+                    <mxGeometry x="50" y="440" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="204" value="結果を通知する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="20" vertex="1">
+                    <mxGeometry x="50" y="580" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="206" value="エラー終了" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="20" vertex="1">
+                    <mxGeometry x="70" y="690" width="80" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="411" style="edgeStyle=orthogonalEdgeStyle;" parent="20" source="201" target="203" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="412" value="OK" style="edgeStyle=orthogonalEdgeStyle;" parent="20" source="203" target="202" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="413" value="NG" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;" parent="20" source="203" target="206" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="190" y="335"/>
+                            <mxPoint x="190" y="715"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="414" style="edgeStyle=orthogonalEdgeStyle;" parent="20" source="202" target="204" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="外部システム（〇〇）" style="swimlane;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="50" width="220" height="780" as="geometry"/>
+                </mxCell>
+                <mxCell id="301" value="〇〇リクエストを処理する" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="30" vertex="1">
+                    <mxGeometry x="40" y="440" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="501" value="操作内容を送信" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="102" target="201" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="502" value="APIリクエスト" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="202" target="301" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="503" value="処理結果" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="301" target="204" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="504" value="完了通知" style="edgeStyle=orthogonalEdgeStyle;" parent="1" source="204" target="104" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

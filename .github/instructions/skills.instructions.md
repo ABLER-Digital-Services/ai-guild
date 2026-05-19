@@ -11,6 +11,8 @@ excludeAgent: "cloud-agent"
 - `description` が 1-1024 文字で、何をする skill かと、いつ使うかの両方を説明しているか
 - `license`、`compatibility`、`metadata`、`allowed-tools` を使う場合に、説明や制約と矛盾しないか
 - 命名プレフィックス案を使う場合に、`req|des|cod|ut|it|st`、`fn|nf`、`app|inf|ops|mig|pm` と整合しているか
+- skill 本文が、skill 外にある特定ディレクトリ構成、固定パス、格納先、ファイル名、多重作成可否を前提にしていないか
+- リポジトリ固有の配置ルールや命名規約を、対象リポジトリ側の instructions / CONTRIBUTING / README などへ委ねているか
 - 本文が冗長すぎず、入出力、適用条件、期待成果が読み取れるか
 - `references/` や `assets/` に逃がすべき長い説明を `SKILL.md` に抱え込みすぎていないか
 - `SKILL.md` 本文や付随リソースが、`.env`、SSH 鍵、クラウド認証情報、ブラウザ Cookie、`.git-credentials` などの収集や外部送信を促していないか
