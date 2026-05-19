@@ -1,0 +1,168 @@
+name: Skill Validation
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+
+permissions:
+  contents: read
+
+jobs:
+  validate-skills:
+    runs-on: larger-ubuntu-8core-fixed-ip
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate changed skills
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import re
+          import subprocess
+          import sys
+
+          REPO = pathlib.Path.cwd()
+          SKILL_ROOTS = (pathlib.Path("skills"), pathlib.Path(".github/skills"))
+          NAME_PATTERN = re.compile(r"^[a-z0-9-]{1,64}$")
+          EXPLICIT_WHAT_WHEN_PATTERN = re.compile(r"(use when|use this skill when|what it does|when to use|何をする|いつ使う)", re.IGNORECASE)
+          DANGEROUS_PATTERNS = {
+              "外部取得スクリプトの直接実行": re.compile(r"curl\b[^\n|]*\|\s*(sh|bash)\b|wget\b[^\n|]*\|\s*(sh|bash)\b", re.IGNORECASE),
+              "権限昇格": re.compile(r"\bsudo\b|-Verb\s+RunAs\b", re.IGNORECASE),
+              "危険な PowerShell 実行": re.compile(r"\b(Invoke-Expression|iex)\b", re.IGNORECASE),
+              "ルート削除": re.compile(r"rm\s+-rf\s+/(\s|$)"),
+              "GitHub トークン形式": re.compile(r"\b(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
+              "AWS Access Key 形式": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+              "秘密鍵": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+          }
+
+          def changed_files():
+              result = subprocess.run(
+                  ["git", "diff", "--name-only", os.environ["BASE_SHA"], os.environ["HEAD_SHA"]],
+                  check=True,
+                  capture_output=True,
+                  text=True,
+              )
+              return [pathlib.Path(line.strip()) for line in result.stdout.splitlines() if line.strip()]
+
+          def is_under(path, root):
+              try:
+                  path.relative_to(root)
+                  return True
+              except ValueError:
+                  return False
+
+          def extract_frontmatter(text, path):
+              lines = text.splitlines()
+              if len(lines) < 3 or lines[0].strip() != "---":
+                  raise ValueError(f"{path}: YAML frontmatter が必要です")
+              try:
+                  end = lines[1:].index("---") + 1
+              except ValueError as exc:
+                  raise ValueError(f"{path}: frontmatter の終端 '---' がありません") from exc
+
+              frontmatter = {}
+              for raw in lines[1:end]:
+                  if not raw.strip() or raw.lstrip().startswith("#") or ":" not in raw:
+                      continue
+                  key, value = raw.split(":", 1)
+                  frontmatter[key.strip()] = value.strip().strip("\"'")
+              return frontmatter, lines[end + 1 :]
+
+          def has_what_when_description(description):
+              normalized = re.sub(r"\s+", " ", description).strip()
+              if EXPLICIT_WHAT_WHEN_PATTERN.search(normalized):
+                  return True
+
+              segments = [
+                  segment.strip(" ,、。.;:!?()[]{}")
+                  for segment in re.split(r"[。.!?;:\n]", normalized)
+                  if segment.strip()
+              ]
+              if len(segments) >= 2:
+                  return True
+
+              broad_usage_cue = re.search(r"(use|for|during|while|when|to\s+[a-z]|向け|用途|場面|場合|とき|時|際|用|使う|使います)", normalized, re.IGNORECASE)
+              broad_action_cue = re.search(r"(organize|generate|create|review|validate|check|debug|scaffold|整理|生成|作成|レビュー|検証|確認|追加|改善|支援)", normalized, re.IGNORECASE)
+              return bool(broad_usage_cue and broad_action_cue)
+
+          files = changed_files()
+          changed_skill_docs = sorted(
+              {
+                  path
+                  for path in files
+                  if path.name == "SKILL.md" and any(is_under(path, root) for root in SKILL_ROOTS)
+              }
+          )
+          changed_skill_scripts = [
+              path
+              for path in files
+              if any(is_under(path, root / "scripts") for root in SKILL_ROOTS)
+          ]
+
+          if not changed_skill_docs and not changed_skill_scripts:
+              print("skills 配下の変更がないため、Skill Validation を成功扱いで終了します。")
+              sys.exit(0)
+
+          errors = []
+
+          for skill_file in changed_skill_docs:
+              text = (REPO / skill_file).read_text(encoding="utf-8")
+              try:
+                  frontmatter, body_lines = extract_frontmatter(text, skill_file)
+              except ValueError as exc:
+                  errors.append(str(exc))
+                  continue
+
+              folder_name = skill_file.parent.name
+              name = frontmatter.get("name", "")
+              description = frontmatter.get("description", "")
+
+              if not name:
+                  errors.append(f"{skill_file}: frontmatter に name が必要です")
+              elif not NAME_PATTERN.fullmatch(name):
+                  errors.append(f"{skill_file}: name は英小文字、数字、ハイフンのみの 1-64 文字にしてください")
+              elif name != folder_name:
+                  errors.append(f"{skill_file}: name はディレクトリ名 '{folder_name}' と一致させてください")
+
+              if not description:
+                  errors.append(f"{skill_file}: frontmatter に description が必要です")
+              else:
+                  if len(description) < 10 or len(description) > 1024:
+                      errors.append(f"{skill_file}: description は 10-1024 文字にしてください")
+                  if not has_what_when_description(description):
+                      errors.append(f"{skill_file}: description は『何をするか』と『いつ使うか』が分かる書き方にしてください")
+
+              if len(text.splitlines()) > 550:
+                  errors.append(f"{skill_file}: ファイル全体が長すぎます。550 行以内を目安にしてください")
+              if len(body_lines) > 500:
+                  errors.append(f"{skill_file}: 本文は 500 行以内を目安にしてください")
+
+          for script_file in changed_skill_scripts:
+              full_path = REPO / script_file
+              if not full_path.exists() or full_path.is_dir():
+                  continue
+              text = full_path.read_text(encoding="utf-8", errors="ignore")
+              for label, pattern in DANGEROUS_PATTERNS.items():
+                  if pattern.search(text):
+                      errors.append(f"{script_file}: {label} に該当するパターンが含まれています")
+
+          if errors:
+              print("Skill Validation に失敗しました:", file=sys.stderr)
+              for error in errors:
+                  print(f"- {error}", file=sys.stderr)
+              sys.exit(1)
+
+          print("Skill Validation を完了しました。")
+          PY
