@@ -84,8 +84,17 @@ AI レビューは参考コメントではなく、マージ判断に必要な�
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jun-shiromizu"><img src="https://avatars.githubusercontent.com/u/211425548?v=4?s=100" width="100px;" alt="白水淳"/><br /><sub><b>白水淳</b></sub></a><br /><a href="https://github.com/ABLER-Digital-Services/ai-guild/commits?author=jun-shiromizu" title="Documentation">📖</a> <a href="#ideas-jun-shiromizu" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 このリポジトリは all-contributors の考え方を取り入れ、コード以外の貢献も可視化していきます。

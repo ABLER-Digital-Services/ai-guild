@@ -12,5 +12,17 @@
   "contributorsSortAlphabetically": true,
   "skipCi": true,
   "contributionType": "all",
-  "contributors": []
+  "contributors": [
+    {
+      "login": "jun-shiromizu",
+      "name": "白水淳",
+      "avatar_url": "https://avatars.githubusercontent.com/u/211425548?v=4",
+      "profile": "https://github.com/jun-shiromizu",
+      "contributions": [
+        "doc",
+        "ideas"
+      ]
+    }
+  ],
+  "commitConvention": "angular"
 }
