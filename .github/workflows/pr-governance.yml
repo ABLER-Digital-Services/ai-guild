@@ -1,4 +1,4 @@
-name: PR Governance
+name: PR ガバナンス
 
 on:
   pull_request:
@@ -17,7 +17,7 @@ jobs:
   validate-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate PR template sections
+      - name: PR テンプレート必須項目を確認
         env:
           PR_BODY: ${{ github.event.pull_request.body || '' }}
         run: |
@@ -40,14 +40,14 @@ jobs:
 
           if missing_sections:
               print(
-                  "Pull Request template is incomplete. Missing sections: "
+                  "Pull Request テンプレートが不完全です。不足しているセクション: "
                   + ", ".join(missing_sections),
                   file=sys.stderr,
               )
               sys.exit(1)
           PY
 
-      - name: Validate changed paths
+      - name: 変更パスを確認
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
@@ -102,17 +102,17 @@ jobs:
 
           if invalid_files:
               print(
-                  "Pull Request contains files outside the approved repository layout: "
+                  "Pull Request に許可されたリポジトリ構成外のファイルが含まれています: "
                   + ", ".join(invalid_files),
                   file=sys.stderr,
               )
               sys.exit(1)
           PY
 
-      - name: Report assumed defaults
+      - name: 現時点の前提を表示
         run: |
-          echo "Assumed defaults for this stage:"
-          echo "- main direct push is not allowed"
-          echo "- at least one human review is expected"
-          echo "- AI review will be added after backend selection"
-          echo "- contributor visibility starts from a simple list"
+          echo "現時点の前提:"
+          echo "- main への直接 push は不可"
+          echo "- 人間レビューを最低 1 件想定"
+          echo "- AI レビューはバックエンド選定後に追加"
+          echo "- 貢献者可視化はシンプルな一覧から開始"
