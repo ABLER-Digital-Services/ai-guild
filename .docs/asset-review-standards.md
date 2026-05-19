@@ -2,6 +2,8 @@
 
 このドキュメントは、agents、skills、hooks、instructions、workflows などの資産をレビューするときの基準のうち、まず agents と skills に適用する初版ルールをまとめたものです。
 
+投稿時の共通ルール、カテゴリ別ルール、命名や置き場所の正本は [../ASSET_AUTHORING_RULES.md](../ASSET_AUTHORING_RULES.md) を参照してください。
+
 ## 基本方針
 
 - 形式チェックは GitHub Actions で機械的に弾く

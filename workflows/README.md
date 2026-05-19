@@ -2,6 +2,8 @@
 
 このディレクトリには、AI を使った自動化ワークフローを配置します。
 
+共通ルールやカテゴリ別の投稿ルールは [../ASSET_AUTHORING_RULES.md](../ASSET_AUTHORING_RULES.md) を参照してください。
+
 例:
 
 - Pull Request 自動レビュー

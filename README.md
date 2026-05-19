@@ -17,6 +17,36 @@ GitHub Copilot、Codex、Claude Code などを含む AI エージェント全般
 - Pull Request には AI 自動レビューを必須でかける
 - 貢献の量と質が見える状態をつくる
 
+## このリポジトリの目的と位置づけ
+
+このリポジトリは、AI エージェントを安全かつ再利用しやすい形で使うための社内標準の置き場です。
+
+- 利用者にとっては、すぐ使える知見と手順の集約先です
+- 投稿者にとっては、レビュー付きで資産を改善・共有する場です
+- 管理者やレビューアにとっては、運用ルールと品質ゲートを保つ対象です
+
+## 最初に読む場所
+
+### 知見を使いたい人向け
+
+- リポジトリ全体の概要: [README.md](README.md)
+- 利用ルールと前提: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 問い合わせ先と Issue の使い分け: [SUPPORT.md](SUPPORT.md)
+
+### 知見を投稿したい人向け
+
+- 投稿ルール全体: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 共通ルールとカテゴリ別ルール: [ASSET_AUTHORING_RULES.md](ASSET_AUTHORING_RULES.md)
+- 各資産のレビュー基準: [.docs/asset-review-standards.md](.docs/asset-review-standards.md)
+- 管理者レビューで見られる観点: [.docs/ai-review.md](.docs/ai-review.md)
+
+### リポジトリ管理者・レビューア向け
+
+- GitHub 設定と Rulesets: [.docs/admin-setup.md](.docs/admin-setup.md)
+- AI レビューの考え方: [.docs/ai-review.md](.docs/ai-review.md)
+- 中長期の方針: [.docs/plan.md](.docs/plan.md)
+- 未決定の論点: [.docs/decisions.md](.docs/decisions.md)
+
 ## 何を置くか
 
 awesome-copilot を参考にしつつ、特定ツールに閉じない形で資産の種類を明確に分けます。
@@ -31,15 +61,6 @@ awesome-copilot を参考にしつつ、特定ツールに閉じない形で資�
 
 社内版として重要なのは、単に資産を並べることではなく、公開品質を保つための審査導線を最初から埋め込むことです。
 
-## 使い始める
-
-- 利用ルールは CONTRIBUTING.md を参照
-- 中長期の設計方針は .docs/plan.md を参照
-- 未決定の論点は .docs/decisions.md を参照
-- AI エージェント向けの作業指針は AGENTS.md を参照
-- 運用上の問い合わせは SUPPORT.md を参照
-- セキュリティ報告は SECURITY.md を参照
-
 ## リポジトリ構成
 
 - instructions: 指示資産の置き場
@@ -49,6 +70,25 @@ awesome-copilot を参考にしつつ、特定ツールに閉じない形で資�
 - workflows: GitHub Actions や自動化資産の置き場
 - cookbook: レシピやサンプルの置き場
 - .docs: 内部向け運用文書の置き場
+
+## 投稿とレビューの流れ
+
+知見を追加・改善するときの基本導線は次のとおりです。
+
+1. Issue で相談するか、直接 Pull Request を作るかを決める
+2. Fork または作業ブランチで変更を作る
+3. Pull Request に背景、影響範囲、リスク、検証内容を書く
+4. 自動チェックと Copilot review の指摘を確認する
+5. 必要に応じて修正し、人間レビューを経てマージする
+
+詳しい使い分けや各資産のルールは [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
+共通ルールやカテゴリ別の投稿ルールの正本は [ASSET_AUTHORING_RULES.md](ASSET_AUTHORING_RULES.md) にあります。
+
+## Issue と問い合わせ
+
+- 資産追加や改善提案、運用上の質問は [SUPPORT.md](SUPPORT.md) を参照
+- セキュリティ上の問題は [SECURITY.md](SECURITY.md) を参照
 
 ## 運用原則
 
@@ -105,8 +145,8 @@ AI レビューは参考コメントではなく、マージ判断に必要な�
 
 詳しくは次を参照してください。
 
-- CONTRIBUTING.md
-- CODE_OF_CONDUCT.md
-- SECURITY.md
-- SUPPORT.md
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SECURITY.md](SECURITY.md)
+- [SUPPORT.md](SUPPORT.md)
 
