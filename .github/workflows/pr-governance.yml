@@ -72,7 +72,7 @@ jobs:
               "workflows",
               "cookbook",
               "README.md",
-                ".all-contributorsrc",
+              ".all-contributorsrc",
               "CONTRIBUTING.md",
               "AGENTS.md",
               "SECURITY.md",
@@ -80,18 +80,18 @@ jobs:
               "CODEOWNERS",
           }
 
-              base_sha = os.environ["BASE_SHA"]
-              head_sha = os.environ["HEAD_SHA"]
-              result = subprocess.run(
-                ["git", "diff", "--name-only", base_sha, head_sha],
-                check=True,
-                capture_output=True,
-                text=True,
+          base_sha = os.environ["BASE_SHA"]
+          head_sha = os.environ["HEAD_SHA"]
+          result = subprocess.run(
+              ["git", "diff", "--name-only", base_sha, head_sha],
+              check=True,
+              capture_output=True,
+              text=True,
           )
-              files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+          files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
           invalid_files = []
-              for filename in files:
+          for filename in files:
               root_entry = filename.split("/", 1)[0] if "/" in filename else filename
               if root_entry not in allowed_root_entries:
                   invalid_files.append(filename)
