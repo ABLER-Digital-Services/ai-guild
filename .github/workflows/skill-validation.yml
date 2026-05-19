@@ -36,7 +36,7 @@ jobs:
           REPO = pathlib.Path.cwd()
           SKILL_ROOTS = (pathlib.Path("skills"), pathlib.Path(".github/skills"))
           NAME_PATTERN = re.compile(r"^[a-z0-9-]{1,64}$")
-          WHAT_WHEN_PATTERN = re.compile(r"(use when|use this skill when|what it does|when to use|何をする|いつ使う)", re.IGNORECASE)
+          EXPLICIT_WHAT_WHEN_PATTERN = re.compile(r"(use when|use this skill when|what it does|when to use|何をする|いつ使う)", re.IGNORECASE)
           DANGEROUS_PATTERNS = {
               "外部取得スクリプトの直接実行": re.compile(r"curl\b[^\n|]*\|\s*(sh|bash)\b|wget\b[^\n|]*\|\s*(sh|bash)\b", re.IGNORECASE),
               "権限昇格": re.compile(r"\bsudo\b|-Verb\s+RunAs\b", re.IGNORECASE),
@@ -79,6 +79,23 @@ jobs:
                   key, value = raw.split(":", 1)
                   frontmatter[key.strip()] = value.strip().strip("\"'")
               return frontmatter, lines[end + 1 :]
+
+          def has_what_when_description(description):
+              normalized = re.sub(r"\s+", " ", description).strip()
+              if EXPLICIT_WHAT_WHEN_PATTERN.search(normalized):
+                  return True
+
+              segments = [
+                  segment.strip(" ,、。.;:!?()[]{}")
+                  for segment in re.split(r"[。.!?;:\n]", normalized)
+                  if segment.strip()
+              ]
+              if len(segments) >= 2:
+                  return True
+
+              broad_usage_cue = re.search(r"(use|for|during|while|when|to\s+[a-z]|向け|用途|場面|場合|とき|時|際|用|使う|使います)", normalized, re.IGNORECASE)
+              broad_action_cue = re.search(r"(organize|generate|create|review|validate|check|debug|scaffold|整理|生成|作成|レビュー|検証|確認|追加|改善|支援)", normalized, re.IGNORECASE)
+              return bool(broad_usage_cue and broad_action_cue)
 
           files = changed_files()
           changed_skill_docs = sorted(
@@ -124,7 +141,7 @@ jobs:
               else:
                   if len(description) < 10 or len(description) > 1024:
                       errors.append(f"{skill_file}: description は 10-1024 文字にしてください")
-                  if not WHAT_WHEN_PATTERN.search(description):
+                  if not has_what_when_description(description):
                       errors.append(f"{skill_file}: description は『何をするか』と『いつ使うか』が分かる書き方にしてください")
 
               if len(text.splitlines()) > 550:
