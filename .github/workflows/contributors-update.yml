@@ -1,0 +1,88 @@
+name: Contributors Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: GitHub username to add to all-contributors
+        required: true
+        type: string
+      contributions:
+        description: Comma-separated contribution types such as doc,ideas
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Update all-contributors files
+        env:
+          PRIVATE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx all-contributors-cli add "${{ inputs.username }}" "${{ inputs.contributions }}"
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --quiet -- README.md .all-contributorsrc; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/contributors-${{ inputs.username }}-${{ github.run_id }}
+          body: |
+            ## Summary
+
+            - add ${{ inputs.username }} to the all-contributors list for ${{ inputs.contributions }}
+
+            ## Why
+
+            - keep contributor visibility aligned with merged contributions
+
+            ## Change Type
+
+            - docs
+            - workflow-generated maintenance
+
+            ## Target Agent Scope
+
+            - contributors metadata
+
+            ## Affected Areas
+
+            - README.md
+            - .all-contributorsrc
+
+            ## Risk Check
+
+            - no runtime code changes
+            - limited to contributor metadata and generated README content
+
+            ## Validation
+
+            - ran all-contributors CLI via GitHub Actions
+            - confirmed a diff exists before opening this pull request
+
+      - name: Report no-op
+        if: steps.changes.outputs.has_changes != 'true'
+        run: |
+          echo "No contributor changes were detected. The requested contributor may already be registered."
