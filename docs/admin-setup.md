@@ -41,8 +41,9 @@
 
 ### 4. Contributors 可視化
 
-- all-contributors GitHub App は導入済み
-- 使えない場合は CLI または手動更新で contributors セクションを維持する
+- all-contributors の記録形式を採用する
+- 初期運用は CLI で実施する
+- GitHub App は使える場合のみ補助的に使う
 
 ### 5. Repository settings
 
@@ -53,25 +54,26 @@
 ## 今後この後にやること
 
 - AI レビューのワークフロー追加
-- contributors 追加運用の初回確認
+- contributors 追加運用の初回実行
 
 ## GitHub 上で次に実施すること
 
-この環境からは GitHub への外向きアクセスが proxy 認証で失敗しているため、以下の操作は GitHub Web UI で実施してください。
+この環境からは GitHub への外向きアクセスが proxy 認証で失敗しているため、以下の操作は GitHub Web UI またはローカル端末で実施してください。
 
-### 1. all-contributors の初回確認
+### 1. all-contributors の初回実行
 
-1. ai-guild の issue を 1 件作成する
-2. issue コメントで次を投稿する
-3. `@all-contributors please add @jun-shiromizu for doc, ideas`
-4. Bot が contributors 追加用の Pull Request を作成することを確認する
-5. 生成された Pull Request をレビューしてマージする
+1. contributors 追加用の作業ブランチを作成する、または GitHub Actions の `Contributors Update` を開く
+2. ローカルで次を実行する、または workflow_dispatch の入力に同じ値を入れる
+3. `npx all-contributors-cli add jun-shiromizu doc,ideas`
+4. `README.md` と `.all-contributorsrc` の差分、または workflow が作成した Pull Request を確認する
+5. ローカル実行時は変更を commit して Pull Request を作成する
+6. レビューしてマージする
 
 確認ポイント:
 
 - README の Contributors セクションに反映されること
 - `.all-contributorsrc` に contributor 情報が追加されること
-- Bot コメントと Pull Request 生成が正常に行われること
+- 通常の Pull Request フローで安全に反映できること
 
 ### 2. Branch protection の有効化
 
@@ -101,3 +103,5 @@
 ## 補足
 
 もし `PR Governance / validate-pr` が required status checks に表示されない場合は、先に一度 Pull Request を流して workflow を実行し、チェック名が GitHub に認識された後で required に設定してください。
+
+all-contributors GitHub App は組織のネットワーク制約や外部 App 制約で無反応になることがあるため、このリポジトリでは CLI を既定運用とします。

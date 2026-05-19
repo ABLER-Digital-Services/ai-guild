@@ -41,15 +41,17 @@ ai-guild は、社内向けの AI エージェント活用ナレッジとカス�
 
 このリポジトリでは all-contributors を使って、コード以外の貢献も記録します。
 
-Bot が有効な場合は、issue または Pull Request のコメントで次のように依頼できます。
+既定運用では、管理者が CLI で contributor 情報を追加します。
 
-`@all-contributors please add @<username> for <contributions>`
+`npx all-contributors-cli add <username> <contributions>`
 
 例:
 
-`@all-contributors please add @jun-shiromizu for doc, ideas`
+`npx all-contributors-cli add jun-shiromizu doc,ideas`
 
-使える contribution type は all-contributors の定義に従います。Bot が使えない場合は、管理者が CLI または手動で反映します。
+このコマンドで `.all-contributorsrc` と `README.md` が更新されます。変更は通常の Pull Request と同じようにレビューして main に取り込みます。
+
+使える contribution type は all-contributors の定義に従います。必要に応じて管理者が `npx all-contributors-cli generate` で一覧を再生成できます。GitHub App の Bot は使える環境でのみ補助的に扱います。
 
 ## レビューで見る観点
 
@@ -73,6 +75,6 @@ Bot が有効な場合は、issue または Pull Request のコメントで次�
 次は運用開始までに確定させます。
 
 - ブランチ保護の厳格度
-- all-contributors Bot の GitHub App 導入可否
+- contributors 追加をどこまで定期運用に寄せるか
 
 詳細な検討事項は docs/decisions.md を参照してください。
