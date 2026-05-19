@@ -39,9 +39,13 @@ skills 配下の資産は、`.github/skills/make-skill-template/SKILL.md` の制
 - `description` は必須
 - `name` は 1-64 文字
 - `name` は英小文字、数字、ハイフンのみを使う
+- `name` は先頭・末尾をハイフンにしない
+- `name` は連続ハイフンを含めない
 - `name` は skill ディレクトリ名と一致させる
 - `description` は 1-1024 文字
 - `description` は何をする skill かと、いつ使うかの両方を説明する
+- `compatibility` を使う場合は 1-500 文字に収める
+- `allowed-tools` を使う場合は空文字にしない
 
 ### SKILL.md 本文
 
@@ -58,6 +62,14 @@ skills 配下の `scripts/` は、少なくとも次を満たすことを求め�
 - 外部から取得したスクリプトをそのまま pipe で実行しない
 - ルート削除や無差別削除のような破壊的コマンドを含めない
 - 利用者の環境を広く変更する処理は、必要性と影響を説明する
+- `.env`、SSH 鍵、クラウド認証情報、ブラウザ Cookie、`.git-credentials` などの収集や外部送信を前提にしない
+- PNG メタデータ、SVG、HTML コメントなどの見えにくい場所に指示を隠すコンテキスト汚染を前提にしない
+- `SKILL.md` の shebang や hooks によるロード時の決定論的コマンド実行を前提にしない
+- `conftest.py` などエコシステムの自動探索を悪用するファイルを同梱しない
+- `npm install`、`pip install`、`uv add` などの依存導入を安易に促さない
+- 承認回避、非開示、気づかれない実行を促す挙動を含めない
+- `~/.claude/CLAUDE.md` の改変、逆トンネル、RAT 導入につながる処理を含めない
+- 起動時設定やスケジューラ改変による永続化を前提にしない
 
 初版の自動チェックでは、次のような明確な危険パターンを禁止対象にします。
 
@@ -66,6 +78,14 @@ skills 配下の `scripts/` は、少なくとも次を満たすことを求め�
 - `wget ... | sh`
 - `sudo ` や `-Verb RunAs` による権限昇格
 - `Invoke-Expression` や `iex`
+- HTML コメントなどに隠した指示
+- shebang や hooks によるロード時実行
+- `conftest.py` などの自動探索悪用
+- `--dangerously-skip-permissions` を含む依存導入誘導
+- 認証情報ファイルや環境変数の収集と外部送信の組み合わせ
+- `~/.claude/CLAUDE.md` 改変、逆トンネル、RAT 導入の兆候
+- 承認回避や非開示を促す記述
+- `~/.bashrc`、`crontab`、Task Scheduler、LaunchAgents などの永続化
 - 明確な秘密情報形式の埋め込み
 
 ## 初版の自動チェック範囲
@@ -74,8 +94,11 @@ skills 配下の `scripts/` は、少なくとも次を満たすことを求め�
 
 - `SKILL.md` の frontmatter 必須項目
 - `name` とディレクトリ名の一致
+- `name` の先頭・末尾ハイフン禁止と連続ハイフン禁止
 - `name` と `description` の文字数
 - `description` の記述ぶり
+- `compatibility` と `allowed-tools` の基本制約
+- ドラフト命名プレフィックス案を使う場合の形式整合
 - `SKILL.md` の行数上限
 - `scripts/` 配下の明確な危険パターン
 

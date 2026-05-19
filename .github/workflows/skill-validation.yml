@@ -36,12 +36,29 @@ jobs:
           REPO = pathlib.Path.cwd()
           SKILL_ROOTS = (pathlib.Path("skills"), pathlib.Path(".github/skills"))
           NAME_PATTERN = re.compile(r"^[a-z0-9-]{1,64}$")
+          PHASE_PREFIXES = {"req", "des", "cod", "ut", "it", "st"}
+          CONCERN_PREFIXES = {"fn", "nf"}
+          DOMAIN_PREFIXES = {"app", "inf", "ops", "mig", "pm"}
           EXPLICIT_WHAT_WHEN_PATTERN = re.compile(r"(use when|use this skill when|what it does|when to use|何をする|いつ使う)", re.IGNORECASE)
+          SECRET_SOURCE_PATTERN = re.compile(r"(\.env\b|id_rsa\b|id_ed25519\b|\.aws/credentials\b|\.git-credentials\b|\.npmrc\b|\.pypirc\b|cookies?\.sqlite\b|login data\b|browser cookies?\b|credential store\b)", re.IGNORECASE)
+          ENV_DUMP_PATTERN = re.compile(r"(\bprintenv\b|\benv\b|Get-ChildItem\s+Env:|os\.environ|process\.env)", re.IGNORECASE)
+          OUTBOUND_PATTERN = re.compile(r"(\bcurl\b|\bwget\b|Invoke-WebRequest|Invoke-RestMethod|requests\.(post|put)\b|httpx\.(post|put)\b|axios\.(post|put)\b|fetch\s*\()", re.IGNORECASE)
+          HIDDEN_INSTRUCTION_PATTERN = re.compile(r"<!--(?:(?!-->).){0,800}(curl|wget|bash|npm\s+install|pip\s+install|do not tell|silently|\.env|id_rsa)(?:(?!-->).){0,800}-->", re.IGNORECASE | re.DOTALL)
+          HARNESS_PATTERN = re.compile(r"(?m)^!\s*(curl|wget|bash|sh|python|node|pwsh|powershell|/)")
+          HOOK_EXEC_PATTERN = re.compile(r"(?is)hooks?.{0,200}(curl|wget|bash|sh|python|node|pwsh|powershell|npm\s+install|pip\s+install)")
+          DEPENDENCY_INSTALL_PATTERN = re.compile(r"(\bnpm\s+(install|i)\b|\bpnpm\s+add\b|\byarn\s+add\b|\bpip(?:3)?\s+install\b|\buv\s+add\b|\bgo\s+get\b|\bcargo\s+add\b)", re.IGNORECASE)
+          DANGEROUS_SKIP_PATTERN = re.compile(r"--dangerously-skip-permissions", re.IGNORECASE)
+          CORE_MEMORY_PATTERN = re.compile(r"(~/\.claude/CLAUDE\.md|\.claude/CLAUDE\.md|CLAUDE\.md\b)", re.IGNORECASE)
+          CORE_MEMORY_WRITE_PATTERN = re.compile(r"(echo\b|cat\b|tee\b|sed\b|python\b|node\b|cp\b|mv\b|write|append|追記|書き換え)", re.IGNORECASE)
+          REVERSE_TUNNEL_PATTERN = re.compile(r"(ssh\s+-R\b|cloudflared\s+tunnel\b|ngrok\b|frpc\b|chisel\b|nc\s+-e\b|socat\b)", re.IGNORECASE)
+          DECEPTIVE_INSTRUCTION_PATTERN = re.compile(r"(without\s+(asking|approval|confirmation)|silently|quietly|do not tell|hide\s+(this|the action)|確認せず|承認なし|無断で|黙って|隠れて|通知せず)", re.IGNORECASE)
           DANGEROUS_PATTERNS = {
               "外部取得スクリプトの直接実行": re.compile(r"curl\b[^\n|]*\|\s*(sh|bash)\b|wget\b[^\n|]*\|\s*(sh|bash)\b", re.IGNORECASE),
               "権限昇格": re.compile(r"\bsudo\b|-Verb\s+RunAs\b", re.IGNORECASE),
               "危険な PowerShell 実行": re.compile(r"\b(Invoke-Expression|iex)\b", re.IGNORECASE),
               "ルート削除": re.compile(r"rm\s+-rf\s+/(\s|$)"),
+              "永続化や起動時改変": re.compile(r"(\.bashrc\b|\.zshrc\b|crontab\b|schtasks\b|LaunchAgents\b|systemd\b|rc\.local\b)", re.IGNORECASE),
+              "pytest の conftest.py 持ち込み": re.compile(r"(^|/)conftest\.py$", re.IGNORECASE),
               "GitHub トークン形式": re.compile(r"\b(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
               "AWS Access Key 形式": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
               "秘密鍵": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
@@ -97,6 +114,66 @@ jobs:
               broad_action_cue = re.search(r"(organize|generate|create|review|validate|check|debug|scaffold|整理|生成|作成|レビュー|検証|確認|追加|改善|支援)", normalized, re.IGNORECASE)
               return bool(broad_usage_cue and broad_action_cue)
 
+          def validate_name_shape(name, skill_file):
+              errors = []
+              if name.startswith("-") or name.endswith("-"):
+                  errors.append(f"{skill_file}: name の先頭・末尾をハイフンにしないでください")
+              if "--" in name:
+                  errors.append(f"{skill_file}: name に連続ハイフンを使わないでください")
+              return errors
+
+          def validate_optional_frontmatter(frontmatter, skill_file):
+              errors = []
+
+              compatibility = frontmatter.get("compatibility", "")
+              if compatibility and len(compatibility) > 500:
+                  errors.append(f"{skill_file}: compatibility は 1-500 文字にしてください")
+
+              allowed_tools = frontmatter.get("allowed-tools")
+              if allowed_tools is not None and not allowed_tools.strip():
+                  errors.append(f"{skill_file}: allowed-tools を使う場合は空にしないでください")
+
+              return errors
+
+          def validate_prefix_convention(name, skill_file):
+              parts = name.split("-")
+              if not parts or parts[0] not in PHASE_PREFIXES:
+                  return []
+
+              if len(parts) < 2:
+                  return [f"{skill_file}: 命名プレフィックス案を使う場合は topic を含めてください"]
+              if parts[1] in DOMAIN_PREFIXES:
+                  return [] if len(parts) >= 3 else [f"{skill_file}: <phase>-<domain>-<topic> 形式では topic を含めてください"]
+              if parts[1] in CONCERN_PREFIXES:
+                  if len(parts) < 4 or parts[2] not in DOMAIN_PREFIXES:
+                      return [f"{skill_file}: <phase>-<concern>-<domain>-<topic> 形式にしてください"]
+                  return []
+              return []
+
+          def validate_skill_text_security(text, skill_file):
+              errors = []
+              if HIDDEN_INSTRUCTION_PATTERN.search(text):
+                  errors.append(f"{skill_file}: HTML コメントなどに隠した疑わしい指示が含まれています")
+              if HARNESS_PATTERN.search(text):
+                  errors.append(f"{skill_file}: shebang 形式コマンドによるロード時実行の疑いがあります")
+              if HOOK_EXEC_PATTERN.search(text):
+                  errors.append(f"{skill_file}: hooks を使ったコマンド実行の疑いがあります")
+              if DECEPTIVE_INSTRUCTION_PATTERN.search(text):
+                  errors.append(f"{skill_file}: 承認回避や非開示を促す疑いのある記述が含まれています")
+              if OUTBOUND_PATTERN.search(text) and SECRET_SOURCE_PATTERN.search(text):
+                  errors.append(f"{skill_file}: 秘密情報ファイルや認証情報の外部送信につながる疑いがあります")
+              if OUTBOUND_PATTERN.search(text) and ENV_DUMP_PATTERN.search(text):
+                  errors.append(f"{skill_file}: 環境変数の外部送信につながる疑いがあります")
+              if DANGEROUS_SKIP_PATTERN.search(text):
+                  errors.append(f"{skill_file}: --dangerously-skip-permissions の利用は許可しません")
+              if DEPENDENCY_INSTALL_PATTERN.search(text) and DECEPTIVE_INSTRUCTION_PATTERN.search(text):
+                  errors.append(f"{skill_file}: 依存導入と欺瞞的指示の組み合わせが含まれています")
+              if CORE_MEMORY_PATTERN.search(text) and CORE_MEMORY_WRITE_PATTERN.search(text):
+                  errors.append(f"{skill_file}: ~/.claude/CLAUDE.md などのコアメモリ改変につながる疑いがあります")
+              if REVERSE_TUNNEL_PATTERN.search(text):
+                  errors.append(f"{skill_file}: 逆トンネルや RAT 導入につながる疑いがあります")
+              return errors
+
           files = changed_files()
           changed_skill_docs = sorted(
               {
@@ -110,8 +187,15 @@ jobs:
               for path in files
               if any(is_under(path, root / "scripts") for root in SKILL_ROOTS)
           ]
+          changed_skill_other_files = [
+              path
+              for path in files
+              if any(is_under(path, root) for root in SKILL_ROOTS)
+              and path.name != "SKILL.md"
+              and not any(is_under(path, root / "scripts") for root in SKILL_ROOTS)
+          ]
 
-          if not changed_skill_docs and not changed_skill_scripts:
+          if not changed_skill_docs and not changed_skill_scripts and not changed_skill_other_files:
               print("skills 配下の変更がないため、Skill Validation を成功扱いで終了します。")
               sys.exit(0)
 
@@ -135,6 +219,9 @@ jobs:
                   errors.append(f"{skill_file}: name は英小文字、数字、ハイフンのみの 1-64 文字にしてください")
               elif name != folder_name:
                   errors.append(f"{skill_file}: name はディレクトリ名 '{folder_name}' と一致させてください")
+              else:
+                  errors.extend(validate_name_shape(name, skill_file))
+                  errors.extend(validate_prefix_convention(name, skill_file))
 
               if not description:
                   errors.append(f"{skill_file}: frontmatter に description が必要です")
@@ -143,6 +230,9 @@ jobs:
                       errors.append(f"{skill_file}: description は 1-1024 文字にしてください")
                   if not has_what_when_description(description):
                       errors.append(f"{skill_file}: description は『何をするか』と『いつ使うか』が分かる書き方にしてください")
+
+              errors.extend(validate_optional_frontmatter(frontmatter, skill_file))
+              errors.extend(validate_skill_text_security(text, skill_file))
 
               if len(text.splitlines()) > 550:
                   errors.append(f"{skill_file}: ファイル全体が長すぎます。550 行以内を目安にしてください")
@@ -154,9 +244,22 @@ jobs:
               if not full_path.exists() or full_path.is_dir():
                   continue
               text = full_path.read_text(encoding="utf-8", errors="ignore")
+              errors.extend(validate_skill_text_security(text, script_file))
               for label, pattern in DANGEROUS_PATTERNS.items():
                   if pattern.search(text):
                       errors.append(f"{script_file}: {label} に該当するパターンが含まれています")
+
+          for other_file in changed_skill_other_files:
+              full_path = REPO / other_file
+              if not full_path.exists() or full_path.is_dir():
+                  continue
+              if other_file.name.lower() == "conftest.py":
+                  errors.append(f"{other_file}: pytest の conftest.py はエコシステム攻撃につながるため skills 配下に追加しないでください")
+              text = full_path.read_text(encoding="utf-8", errors="ignore")
+              errors.extend(validate_skill_text_security(text, other_file))
+              for label, pattern in DANGEROUS_PATTERNS.items():
+                  if pattern.search(str(other_file)):
+                      errors.append(f"{other_file}: {label} に該当するファイル名またはパスです")
 
           if errors:
               print("Skill Validation に失敗しました:", file=sys.stderr)
