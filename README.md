@@ -1,6 +1,6 @@
 # ai-guild
 
-[![All Contributors](https://img.shields.io/github/all-contributors/ABLER-Digital-Services/ai-guild?color=ee8449&style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-managed-ee8449.svg?style=flat-square)](#contributors)
 
 社内向けの AI エージェント活用ナレッジとカスタマイズ資産を集約するリポジトリです。
 
