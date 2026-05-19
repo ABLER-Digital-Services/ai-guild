@@ -1,4 +1,4 @@
-name: PR ガバナンス
+name: PR Governance
 
 on:
   pull_request:
@@ -110,5 +110,5 @@ jobs:
           echo "現時点の前提:"
           echo "- main への直接 push は不可"
           echo "- 人間レビューを最低 1 件想定"
-          echo "- AI レビューはバックエンド選定後に追加"
+          echo "- Copilot code review は GitHub 設定で自動実行する"
           echo "- 貢献者可視化はシンプルな一覧から開始"
