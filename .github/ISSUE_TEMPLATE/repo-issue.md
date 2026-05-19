@@ -1,7 +1,7 @@
 ---
-name: Repository Issue
+name: リポジトリ課題
 about: リポジトリ運用やドキュメントの不備に関する報告
-title: "[Issue] "
+title: "[課題] "
 labels: [triage]
 assignees: []
 ---
@@ -10,26 +10,26 @@ assignees: []
 
 問題の概要を書いてください。
 
-## Area
+## 対象領域
 
-- [ ] Documentation
-- [ ] Templates
-- [ ] Review flow
-- [ ] Contributors visibility
-- [ ] Other
+- [ ] ドキュメント
+- [ ] テンプレート
+- [ ] レビュー導線
+- [ ] 貢献者可視化
+- [ ] その他
 
-## Expected
+## 期待していた状態
 
 期待していた動作や状態を書いてください。
 
-## Actual
+## 実際の状態
 
 実際の状態を書いてください。
 
-## Reproduction or Context
+## 再現手順または発生状況
 
 再現手順または発生状況を書いてください。
 
-## Additional Context
+## 補足
 
 補足があれば書いてください。
