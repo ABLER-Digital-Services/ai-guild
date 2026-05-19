@@ -15,6 +15,7 @@
 - YAML や JSON のキー名
 - GitHub Actions の action 名、input 名、環境変数名
 - 外部サービスやツールが厳密に要求する識別子や固定文字列
+- Ruleset や branch protection が参照する status check 名、workflow 名、job 名
 - 既存 automation が依存する Pull Request テンプレート見出し
 
 運用ルール:
@@ -27,4 +28,5 @@
 補足:
 
 - `.github/PULL_REQUEST_TEMPLATE.md` の `## Summary` などの見出しは、既存の `PR Governance` チェックが参照するため維持します
+- `.github/workflows/pr-governance.yml` の workflow 名 `PR Governance` は Ruleset の required status checks と一致させるため翻訳しません
 - 見出し配下の説明文やチェック項目は、日本語で補足してよいです
