@@ -128,8 +128,12 @@ my-awesome-skill/
 
 - [ ] Folder name is lowercase with hyphens
 - [ ] `name` field matches folder name exactly
+- [ ] `name` does not start or end with a hyphen
+- [ ] `name` does not contain consecutive hyphens
 - [ ] `description` is 1-1024 characters
 - [ ] `description` explains WHAT and WHEN
+- [ ] `compatibility` is omitted or kept within 1-500 characters
+- [ ] `allowed-tools` is omitted or non-empty
 - [ ] `description` is wrapped in single quotes
 - [ ] Body content is under 500 lines
 - [ ] Bundled assets are under 5MB each
