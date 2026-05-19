@@ -9,20 +9,19 @@
 - main への直接 push は禁止
 - Pull Request 経由でのみ変更する
 - 人間レビューは最低 1 件必要
-- AI レビュー初版は GitHub 標準寄りで導入する
+- main は GitHub Rulesets で保護する
+- Copilot code review は Pull Request ごとに自動実行する
 - 貢献可視化は all-contributors を含む一覧ベースで始める
 
 ## GitHub で設定すること
 
-### 1. Branch protection
+### 1. Rulesets
 
+- branch protection rule ではなく branch ruleset を使う
 - 対象ブランチは main
-- Require a pull request before merging を有効化
-- Require approvals を有効化
-- Dismiss stale pull request approvals を有効化
-- Require status checks to pass before merging を有効化
-- Allow force pushes は無効
-- Allow deletions は無効
+- Enforcement status は Active にする
+- Pull Request 必須、承認必須、必須チェック必須を有効化する
+- force push と deletion は許可しない
 
 ### 2. CODEOWNERS
 
@@ -35,9 +34,10 @@
 
 ### 3. Pull Request review
 
-- Copilot や GitHub の標準レビュー機能を使う場合は有効化を確認する
-- 初期段階では GitHub 標準寄りの構成を優先する
-- 専用 AI レビューを後から足す場合だけ、必要なシークレットと権限を整理する
+- GitHub Copilot code review を有効化する
+- Pull Request 作成時の自動レビューを有効化する
+- `.github/copilot-instructions.md` と `.github/instructions/*.instructions.md` をレビュー時にも使う
+- 専用 AI レビュー workflow は現時点では追加しない
 
 ### 4. Contributors 可視化
 
@@ -53,7 +53,8 @@
 
 ## 今後この後にやること
 
-- AI レビューのワークフロー追加
+- Ruleset の本番反映
+- Copilot 自動レビューの有効化確認
 - contributors 追加運用の初回実行
 
 ## GitHub 上で次に実施すること
@@ -75,33 +76,45 @@
 - `.all-contributorsrc` に contributor 情報が追加されること
 - 通常の Pull Request フローで安全に反映できること
 
-### 2. Branch protection の有効化
+### 2. Rulesets の有効化
 
 1. GitHub で `ABLER-Digital-Services/ai-guild` を開く
-2. Settings > Branches を開く
-3. `main` に対する branch protection rule を追加する
+2. Settings > Rules > Rulesets を開く
+3. `New ruleset` から branch ruleset を作成する
+4. 対象ブランチパターンに `main` を指定する
 
 推奨設定:
 
+- Enforcement status: Active
 - Require a pull request before merging: On
-- Require approvals: 1
+- Required approvals: 1
 - Dismiss stale pull request approvals when new commits are pushed: On
 - Require review from Code Owners: On
 - Require status checks to pass before merging: On
 - Required status checks: `PR Governance / validate-pr`
 - Require branches to be up to date before merging: On
-- Restrict who can push to matching branches: 必要に応じて設定
-- Allow force pushes: Off
-- Allow deletions: Off
+- Block force pushes: On
+- Block deletions: On
+- Restrict updates: 必要に応じて設定
 
-### 3. GitHub 標準寄り AI レビューの確認
+### 3. Copilot code review の有効化
 
-1. Pull Request 作成時に GitHub 標準レビュー導線が使えることを確認する
-2. CODEOWNERS により @jun-shiromizu がレビュー対象に入ることを確認する
-3. `PR Governance` が必須チェックとしてブロックすることを確認する
+1. GitHub で Settings > Copilot > Code review を開く
+2. Pull Request の自動レビューを有効化する
+3. `Use custom instructions when reviewing pull requests` を有効化する
+4. テスト用 Pull Request を 1 件作成し、Copilot が自動で review comment を付けることを確認する
+
+確認ポイント:
+
+- CODEOWNERS により @jun-shiromizu がレビュー対象に入ること
+- `PR Governance / validate-pr` が required status check としてブロックすること
+- Copilot review comment が自動で付与されること
+- `.github/copilot-instructions.md` の日本語方針がレビュー文面にも反映されること
 
 ## 補足
 
 もし `PR Governance / validate-pr` が required status checks に表示されない場合は、先に一度 Pull Request を流して workflow を実行し、チェック名が GitHub に認識された後で required に設定してください。
+
+Copilot code review は required approval には数えられず、マージ可否を直接ブロックしません。このリポジトリでは Copilot review を早期検知の自動信号、人間レビューを最終判断として扱います。
 
 all-contributors GitHub App は組織のネットワーク制約や外部 App 制約で無反応になることがあるため、このリポジトリでは CLI を既定運用とします。

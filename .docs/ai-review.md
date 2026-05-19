@@ -1,6 +1,6 @@
 # AI レビュー方針
 
-ai-guild の AI 自動レビュー初版は、GitHub 標準寄りで始めます。
+ai-guild の AI 自動レビュー初版は、GitHub Rulesets と Copilot code review を軸に始めます。
 
 ## この方針の意味
 
@@ -8,10 +8,10 @@ ai-guild の AI 自動レビュー初版は、GitHub 標準寄りで始めます
 
 対象例:
 
-- GitHub 上の標準レビュー導線
+- GitHub Copilot code review
 - Pull Request テンプレート
 - CODEOWNERS
-- Branch protection
+- Rulesets
 - GitHub Actions による軽量な妥当性チェック
 
 ## 初版で目指すこと
@@ -19,14 +19,17 @@ ai-guild の AI 自動レビュー初版は、GitHub 標準寄りで始めます
 - 導入と運用を重くしない
 - シークレット管理を増やしすぎない
 - 人間レビューの前段で明らかな抜け漏れを減らす
+- Pull Request 作成直後に自動で初回レビュー信号を出す
 - どの観点が不足するかを実運用で把握する
 
 ## 初版でやるレビュー
 
 - Pull Request テンプレート必須項目の確認
 - 許可されたディレクトリ構成の確認
+- Copilot code review の自動実行
+- `.github/instructions/*.instructions.md` によるレビュー観点の補強
 - CODEOWNERS と人間レビューの前提整備
-- GitHub 標準レビュー機能の活用
+- Rulesets による main 保護
 
 ## 初版でまだやらないこと
 
@@ -47,6 +50,7 @@ ai-guild の AI 自動レビュー初版は、GitHub 標準寄りで始めます
 ## 段階的な拡張イメージ
 
 1. GitHub 標準寄りの運用で開始
-2. PR ガードを追加
-3. メタデータ検証を追加
-4. 必要になったカテゴリだけ専用レビューを追加
+2. Rulesets と PR ガードを有効化
+3. Copilot code review を自動実行
+4. メタデータ検証を追加
+5. 必要になったカテゴリだけ専用レビューを追加
