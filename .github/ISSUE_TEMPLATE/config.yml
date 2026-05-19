@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support Guide
+    url: https://github.com/ABLER-Digital-Services/ai-guild/blob/main/SUPPORT.md
+    about: 利用方法や運用上の問い合わせ先はこちらを確認してください。
+  - name: Security Policy
+    url: https://github.com/ABLER-Digital-Services/ai-guild/blob/main/SECURITY.md
+    about: セキュリティ上の問題は公開 issue ではなくこちらに従って報告してください。

@@ -43,11 +43,10 @@ ai-guild の貢献可視化は、まずは all-contributors 方式の軽量運�
 - `.all-contributorsrc` は作成済み
 - README の contributors セクションは bot 仕様に合わせて配置済み
 - Bot 利用コマンドは CONTRIBUTING.md に記載済み
+- all-contributors GitHub App はインストール済み
 
-## まだ手元で完了できないこと
+## 使い始め方
 
-- GitHub App として all-contributors Bot を対象リポジトリにインストールすること
-
-この作業は GitHub 側の権限が必要です。導入する場合は、all-contributors の GitHub App を組織または対象リポジトリにインストールしてください。
-
-導入後は、issue または Pull Request コメントから contributors を追加できます。
+- issue または Pull Request のコメントで contributors を追加できます
+- 例: `@all-contributors please add @jun-shiromizu for doc, ideas`
+- Bot が利用しにくい場合は CLI または手動更新に切り替えられます

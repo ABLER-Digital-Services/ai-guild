@@ -35,6 +35,8 @@ awesome-copilot を参考にしつつ、特定ツールに閉じない形で資�
 - 中長期の設計方針は docs/plan.md を参照
 - 未決定の論点は docs/decisions.md を参照
 - AI エージェント向けの作業指針は AGENTS.md を参照
+- 運用上の問い合わせは SUPPORT.md を参照
+- セキュリティ報告は SECURITY.md を参照
 
 ## リポジトリ構成
 
@@ -87,4 +89,13 @@ AI レビューは参考コメントではなく、マージ判断に必要な�
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 このリポジトリは all-contributors の考え方を取り入れ、コード以外の貢献も可視化していきます。
+
+## Governance
+
+詳しくは次を参照してください。
+
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- SECURITY.md
+- SUPPORT.md
 
