@@ -4,7 +4,7 @@
 
 共通ルールやカテゴリ別の投稿ルールは [../ASSET_AUTHORING_RULES.md](../ASSET_AUTHORING_RULES.md) を参照してください。
 
-## 公式使用
+## 公式仕様
 Agent Skills の記述ルールは、公式仕様に合わせて次を満たしてください。
 
 - skill ルートに `SKILL.md` を置く
