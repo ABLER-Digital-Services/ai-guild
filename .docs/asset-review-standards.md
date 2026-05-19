@@ -40,7 +40,7 @@ skills 配下の資産は、`.github/skills/make-skill-template/SKILL.md` の制
 - `name` は 1-64 文字
 - `name` は英小文字、数字、ハイフンのみを使う
 - `name` は skill ディレクトリ名と一致させる
-- `description` は 10-1024 文字
+- `description` は 1-1024 文字
 - `description` は何をする skill かと、いつ使うかの両方を説明する
 
 ### SKILL.md 本文
