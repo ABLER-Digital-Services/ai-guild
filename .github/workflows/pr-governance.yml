@@ -17,6 +17,11 @@ jobs:
   validate-pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Validate PR template sections
         env:
           PR_BODY: ${{ github.event.pull_request.body || '' }}
@@ -49,15 +54,13 @@ jobs:
 
       - name: Validate changed paths
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           python3 - <<'PY'
-          import json
           import os
+          import subprocess
           import sys
-          import urllib.request
 
           allowed_root_entries = {
               ".github",
@@ -69,6 +72,7 @@ jobs:
               "workflows",
               "cookbook",
               "README.md",
+                ".all-contributorsrc",
               "CONTRIBUTING.md",
               "AGENTS.md",
               "SECURITY.md",
@@ -76,26 +80,18 @@ jobs:
               "CODEOWNERS",
           }
 
-          repository = os.environ["REPOSITORY"]
-          pr_number = os.environ["PR_NUMBER"]
-          token = os.environ["GITHUB_TOKEN"]
-          api_url = f"https://api.github.com/repos/{repository}/pulls/{pr_number}/files?per_page=100"
-
-          request = urllib.request.Request(
-              api_url,
-              headers={
-                  "Authorization": f"Bearer {token}",
-                  "Accept": "application/vnd.github+json",
-                  "X-GitHub-Api-Version": "2022-11-28",
-              },
+              base_sha = os.environ["BASE_SHA"]
+              head_sha = os.environ["HEAD_SHA"]
+              result = subprocess.run(
+                ["git", "diff", "--name-only", base_sha, head_sha],
+                check=True,
+                capture_output=True,
+                text=True,
           )
-
-          with urllib.request.urlopen(request) as response:
-              files = json.load(response)
+              files = [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
           invalid_files = []
-          for file in files:
-              filename = file["filename"]
+              for filename in files:
               root_entry = filename.split("/", 1)[0] if "/" in filename else filename
               if root_entry not in allowed_root_entries:
                   invalid_files.append(filename)
